@@ -338,6 +338,29 @@ export function useTrip() {
     }
   }
 
+  // ── Reorder Mutations ──
+
+  async function reorderDayItems(dayId, orderedIds) {
+    const updates = orderedIds.map((id, index) => ({ id, sort_order: (index + 1) * 10 }));
+    const sortMap = Object.fromEntries(updates.map((u) => [u.id, u.sort_order]));
+    setDayItems((prev) => prev.map((i) => sortMap[i.id] !== undefined ? { ...i, sort_order: sortMap[i.id] } : i));
+    await Promise.all(updates.map((u) => supabase.from("day_items").update({ sort_order: u.sort_order }).eq("id", u.id)));
+  }
+
+  async function reorderCosts(orderedIds) {
+    const updates = orderedIds.map((id, index) => ({ id, sort_order: (index + 1) * 10 }));
+    const sortMap = Object.fromEntries(updates.map((u) => [u.id, u.sort_order]));
+    setCosts((prev) => prev.map((i) => sortMap[i.id] !== undefined ? { ...i, sort_order: sortMap[i.id] } : i));
+    await Promise.all(updates.map((u) => supabase.from("trip_costs").update({ sort_order: u.sort_order }).eq("id", u.id)));
+  }
+
+  async function reorderAttractions(orderedIds) {
+    const updates = orderedIds.map((id, index) => ({ id, sort_order: (index + 1) * 10 }));
+    const sortMap = Object.fromEntries(updates.map((u) => [u.id, u.sort_order]));
+    setAttractions((prev) => prev.map((i) => sortMap[i.id] !== undefined ? { ...i, sort_order: sortMap[i.id] } : i));
+    await Promise.all(updates.map((u) => supabase.from("attractions").update({ sort_order: u.sort_order }).eq("id", u.id)));
+  }
+
   // ── Hotel Mutations ──
 
   async function addHotel(formData) {
@@ -452,9 +475,9 @@ export function useTrip() {
 
   return {
     days, dayItems, parks, attractions, costs, flights, shoppingItems, hotels, cars, loading,
-    addDayItem, updateDayItem, deleteDayItem, toggleDayItemDone,
-    addAttraction, deleteAttraction,
-    addCost, toggleCostPaid, deleteCost,
+    addDayItem, updateDayItem, deleteDayItem, toggleDayItemDone, reorderDayItems,
+    addAttraction, deleteAttraction, reorderAttractions,
+    addCost, toggleCostPaid, deleteCost, reorderCosts,
     addShoppingItem, updateShoppingItem, toggleShoppingChecked, deleteShoppingItem, moveShoppingItem,
     addHotel, updateHotel, deleteHotel,
     addCar, updateCar, deleteCar,

@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui";
 
-export function Hero({ cd, themeToggle }) {
+export function Hero({ cd, themeToggle, onSearchOpen }) {
   const units = [
     { v: cd.d, l: "dias" }, { v: cd.h, l: "hrs" },
     { v: cd.m, l: "min" }, { v: cd.s, l: "seg" },
@@ -9,9 +9,17 @@ export function Hero({ cd, themeToggle }) {
     <div className="text-center py-8 px-5 border-b border-theme-light relative overflow-hidden"
       style={{ background: `linear-gradient(to bottom, var(--color-hero-from), var(--color-hero-to))` }}>
       <div className="absolute -top-8 -right-4 text-[100px] opacity-[0.04] rotate-[-12deg]">🏰</div>
-      {themeToggle && (
-        <div className="absolute top-3 right-3">{themeToggle}</div>
-      )}
+      <div className="absolute top-3 right-3 flex items-center gap-1.5">
+        {onSearchOpen && (
+          <button onClick={onSearchOpen}
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-sm transition-colors"
+            style={{ background: "rgba(255,107,61,0.1)", color: "var(--color-text-secondary)" }}
+            title="Busca global">
+            🔍
+          </button>
+        )}
+        {themeToggle}
+      </div>
       <div className="text-3xl mb-1">🏰</div>
       <h1 className="text-3xl sm:text-4xl font-bold text-theme-primary" style={{ fontFamily: "var(--font-display)" }}>
         Orlando 2026
